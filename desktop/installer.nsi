@@ -1,6 +1,6 @@
 Unicode true
 Name "동원HUB 메신저"
-OutFile "../desktop-dist/DongwonHUB-Messenger-Setup-1.0.0.exe"
+OutFile "../desktop-dist/DongwonHUB-Messenger-Setup-1.1.0.exe"
 InstallDir "$PROGRAMFILES64\동원HUB 메신저"
 InstallDirRegKey HKLM "Software\DongwonHUBMessenger" "InstallLocation"
 RequestExecutionLevel admin
@@ -8,7 +8,6 @@ SetCompressor /SOLID lzma
 Icon "assets/icon.ico"
 UninstallIcon "assets/icon.ico"
 
-Page directory
 Page instfiles
 UninstPage uninstConfirm
 UninstPage instfiles

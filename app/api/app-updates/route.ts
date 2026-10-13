@@ -1,0 +1,2 @@
+import {raw} from '../../../db/raw';import {APP_BUILD_ID} from '../../../lib/app-build';import {releaseView,type AppRelease} from '../../../lib/app-releases';import {errorResponse} from '../../../lib/auth';
+export async function GET(){try{const r=await raw().prepare('SELECT * FROM hub_app_releases').all<AppRelease>();return Response.json({webBuild:APP_BUILD_ID,releases:r.results.map(releaseView)},{headers:{'Cache-Control':'no-store'}})}catch(e){return errorResponse(e)}}

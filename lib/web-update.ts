@@ -1,0 +1,3 @@
+import {APP_BUILD_ID} from './app-build';
+export async function ensureWebBuild(){try{const r=await fetch('/api/app-updates',{cache:'no-store'});if(!r.ok)return true;const d=await r.json() as {webBuild:string};if(d.webBuild&&d.webBuild!==APP_BUILD_ID){const u=new URL(window.location.href);if(u.searchParams.get('_hubBuild')===d.webBuild)return true;u.searchParams.set('_hubBuild',d.webBuild);window.location.replace(u.href);return false}}catch{}return true}
+export function notifyAppLogin(){window.dispatchEvent(new Event('dongwon-hub:login'));if(new URLSearchParams(window.location.search).get('mobile')==='android')window.location.href='dongwonhub://check-update'}

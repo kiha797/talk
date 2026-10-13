@@ -48,3 +48,5 @@ next-env.d.ts
 /desktop-dist/
 /desktop/.sites-runtime/
 /tsconfig.tsbuildinfo
+/mobile/android/build/
+/.release-secrets/
