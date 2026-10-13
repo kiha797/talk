@@ -12,17 +12,18 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
       - name: Prepare SDK
-        run: sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+        run: test -f /usr/local/lib/android/sdk/platforms/android-35/android.jar
       - name: Build unsigned APK
         env:
           SKIP_SIGN: '1'
           ANDROID_SDK_ROOT: ${{ env.ANDROID_HOME }}
         run: |
+          export ANDROID_HOME="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
           export ANDROID_SDK_ROOT="$ANDROID_HOME"
           bash mobile/android/build.sh
           cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" mobile/android/build/apksigner.jar
