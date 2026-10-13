@@ -1,0 +1,9 @@
+'use client';
+import {useEffect,useState} from 'react';
+import {MapPinned,ArrowLeft,ExternalLink,RefreshCw,Maximize2,Minimize2} from 'lucide-react';
+const MEDIMAP_URL='https://medimap.ipharmkorea.com';
+export function Medimap({onReturn}:{onReturn:()=>void}){
+ const [attempt,setAttempt]=useState(0),[loaded,setLoaded]=useState(false),[slow,setSlow]=useState(false),[fullscreen,setFullscreen]=useState(false);
+ useEffect(()=>{setLoaded(false);setSlow(false);const t=setTimeout(()=>setSlow(true),18000);return()=>clearTimeout(t)},[attempt]);
+ return <section className={'cs-workspace medimap-workspace '+(fullscreen?'cs-fullscreen':'')} aria-label="메디맵"><header className="cs-workspace-header"><div className="cs-workspace-brand"><span><MapPinned size={22}/></span><div><h1>메디맵</h1><p>전국 의료기관과 지역별 영업 현황</p></div></div><div className="cs-header-actions"><button className="cs-back" onClick={onReturn}><ArrowLeft size={16}/><span>동원톡으로</span></button><button className="icon-btn" title="새로고침" aria-label="메디맵 새로고침" onClick={()=>setAttempt(v=>v+1)}><RefreshCw size={18}/></button><button className="icon-btn" aria-label={fullscreen?'전체 화면 닫기':'메디맵 전체 화면'} onClick={()=>setFullscreen(v=>!v)}>{fullscreen?<Minimize2 size={18}/>:<Maximize2 size={18}/>}</button><a className="icon-btn" href={MEDIMAP_URL} target="_blank" rel="noopener noreferrer" title="새 창으로 열기" aria-label="메디맵 새 창으로 열기"><ExternalLink size={18}/></a></div></header><div className="cs-connection"><span>{slow&&!loaded?'연결이 지연되면 새로고침하거나 새 창으로 열어주세요.':'메디맵 원본 사이트를 연결합니다. 지역별 조회와 거래처 현황은 아래 화면에서 이용하세요.'}</span></div><div className="cs-frame-container"><iframe key={attempt} src={MEDIMAP_URL} title="메디맵 의료기관 및 영업 현황" referrerPolicy="strict-origin-when-cross-origin" onLoad={()=>{setLoaded(true);setSlow(false)}} onError={()=>setSlow(true)}/>{!loaded&&!slow&&<div className="cs-loading"><MapPinned size={30}/><strong>메디맵을 불러오고 있습니다</strong><p>전국 의료기관과 지역별 현황을 연결합니다.</p></div>}</div></section>
+}

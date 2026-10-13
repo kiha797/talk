@@ -1,0 +1,1 @@
+export function readSessionToken(req:Request){const header=req.headers.get('x-dw-session');if(header)return /^[a-f0-9]{64}$/.test(header)?header:'';return (req.headers.get('cookie')||'').split(';').map(v=>v.trim()).find(v=>v.startsWith('__Host-dw_session='))?.slice('__Host-dw_session='.length)||''}

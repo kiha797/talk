@@ -1,0 +1,6 @@
+import {createHmac,timingSafeEqual} from 'node:crypto';
+const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+export function encodeBase32(bytes:Uint8Array){let bits=0,value=0,result='';for(const b of bytes){value=(value<<8)|b;bits+=8;while(bits>=5){result+=alphabet[(value>>>(bits-5))&31];bits-=5}}if(bits)result+=alphabet[(value<<(5-bits))&31];return result}
+export function decodeBase32(s:string){let bits=0,value=0;const out=[];for(const c of s.replace(/=+$/,'')){const n=alphabet.indexOf(c);if(n<0)throw Error('Invalid OTP key');value=(value<<5)|n;bits+=5;if(bits>=8){out.push((value>>>(bits-8))&255);bits-=8}}return Buffer.from(out)}
+export function otpAt(secret:string,step:number,digits=6){const counter=Buffer.alloc(8);counter.writeBigUInt64BE(BigInt(step));const h=createHmac('sha1',decodeBase32(secret)).update(counter).digest(),o=h[h.length-1]&15;return String((h.readUInt32BE(o)&0x7fffffff)%10**digits).padStart(digits,'0')}
+export function matchOtp(secret:string,code:string,last=-1,now=Date.now()){if(!/^\d{6}$/.test(code))return null;const current=Math.floor(now/30000);for(const delta of [0,-1,1]){const step=current+delta;if(step>last&&timingSafeEqual(Buffer.from(otpAt(secret,step)),Buffer.from(code)))return step}return null}

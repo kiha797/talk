@@ -1,0 +1,48 @@
+{
+  "name": "dongwon-hub-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "동원HUB Windows messenger",
+  "main": "main.cjs",
+  "scripts": {
+    "dist:win": "node build-win.mjs"
+  },
+  "devDependencies": {
+    "electron": "44.7.0",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "appId": "kr.co.ipharmkorea.dongwonhub",
+    "productName": "동원HUB 메신저",
+    "directories": {
+      "output": "../desktop-dist"
+    },
+    "files": [
+      "main.cjs",
+      "assets/icon.ico",
+      "assets/icon.png",
+      "package.json",
+      "build-win.mjs"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "DongwonHUB-Messenger-Setup-${version}.${ext}"
+    }
+  }
+}
