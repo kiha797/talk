@@ -28,6 +28,34 @@ jobs:
           bash mobile/android/build.sh
           cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" mobile/android/build/apksigner.jar
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging mobile/android/build/DongwonHUB-Android-unsigned.apk
+      - name: Build signed Android update
+        id: signed_android
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if [[ -z "$ANDROID_KEYSTORE_BASE64" || -z "$ANDROID_KEYSTORE_PASSWORD" ]]; then
+            echo 'Android release signing is not configured; no installable update is published.'
+            exit 0
+          fi
+          umask 077
+          mkdir -p .release-secrets
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > .release-secrets/android-release.p12
+          printf '%s' "$ANDROID_KEYSTORE_PASSWORD" > .release-secrets/android-password.txt
+          export HUB_ANDROID_KEYSTORE="$GITHUB_WORKSPACE/.release-secrets/android-release.p12"
+          export HUB_ANDROID_STOREPASS_FILE="$GITHUB_WORKSPACE/.release-secrets/android-password.txt"
+          export HUB_ANDROID_KEY_ALIAS="${ANDROID_KEY_ALIAS:-dongwonhub}"
+          export ANDROID_SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          bash mobile/android/build.sh
+          rm -f .release-secrets/android-release.p12 .release-secrets/android-password.txt
+          echo 'available=true' >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        if: steps.signed_android.outputs.available == 'true'
+        with:
+          name: hub-android-signed-update
+          path: mobile/android/build/DongwonHUB-Android-1.0.1.apk
+          retention-days: 30
       - uses: actions/upload-artifact@v4
         with:
           name: hub-android-unsigned

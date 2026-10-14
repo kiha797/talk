@@ -14,6 +14,6 @@ cp build/base.apk build/unsigned.apk
 (cd build/dex && zip -q ../unsigned.apk classes.dex)
 "$TOOLS/zipalign" -f -p 4 build/unsigned.apk build/DongwonHUB-Android-unsigned.apk
 if [[ "${SKIP_SIGN:-0}" != "1" ]]; then
- "${TOOLS}/apksigner" sign --ks "${HUB_ANDROID_KEYSTORE:-../../.release-secrets/android-release.p12}" --ks-key-alias dongwonhub --ks-pass "file:${HUB_ANDROID_STOREPASS_FILE:-../../.release-secrets/android-password.txt}" --v4-signing-enabled false --out build/DongwonHUB-Android-1.0.0.apk build/DongwonHUB-Android-unsigned.apk
- "${TOOLS}/apksigner" verify --verbose build/DongwonHUB-Android-1.0.0.apk
+ "${TOOLS}/apksigner" sign --ks "${HUB_ANDROID_KEYSTORE:-../../.release-secrets/android-release.p12}" --ks-key-alias "${HUB_ANDROID_KEY_ALIAS:-dongwonhub}" --ks-pass "file:${HUB_ANDROID_STOREPASS_FILE:-../../.release-secrets/android-password.txt}" --v4-signing-enabled false --out build/DongwonHUB-Android-1.0.1.apk build/DongwonHUB-Android-unsigned.apk
+ "${TOOLS}/apksigner" verify --verbose build/DongwonHUB-Android-1.0.1.apk
 fi
