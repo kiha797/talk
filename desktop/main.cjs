@@ -9,7 +9,7 @@ app.setAppUserModelId('kr.co.ipharmkorea.dongwonhub');
 if(!app.requestSingleInstanceLock())app.quit();
 else app.on('second-instance',()=>{if(window){window.show();window.focus()}});
 function createWindow(){
- window=new BrowserWindow({width:880,height:810,minWidth:600,minHeight:600,show:false,backgroundColor:'#fff',title:'동원HUB 메신저',icon:path.join(__dirname,'assets','icon.png'),autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),partition:'persist:dongwonhub',nodeIntegration:false,contextIsolation:true,sandbox:true,webviewTag:false}});
+ window=new BrowserWindow({width:1043,height:871,minWidth:600,minHeight:600,show:false,backgroundColor:'#fff',title:'동원HUB 메신저',icon:path.join(__dirname,'assets','icon.png'),autoHideMenuBar:true,webPreferences:{preload:path.join(__dirname,'preload.cjs'),partition:'persist:dongwonhub',nodeIntegration:false,contextIsolation:true,sandbox:true,webviewTag:false}});
  window.once('ready-to-show',()=>window.show());
  window.loadURL(HUB+'?desktop=1');
  window.webContents.setWindowOpenHandler(({url})=>{if(url.startsWith('https://'))shell.openExternal(url);return {action:'deny'}});
